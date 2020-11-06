@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Unguided Vue Basic</title>
+
+	<script src="vue.js"></script>
+    <!-- Bootstrap-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+</head>
+<body>
+
+	<div class="view" id="app">
+        <form name="form">
+            <div class="div" v-if="path == '.'">
+       			<center>
+	            	<div class="head">
+	                <BR></BR>
+	                <FONT size="10">{{ title }}</FONT>
+	                <p>Tebaklah angka dari 1-10</p>
+	                <BR>
+                	<output id="output" name="x"></output>
+                    <BR>
+                    <h5>Kesempatan : {{ i }} / 3</h5>
+                    <INPUT v-model="guess" TYPE="text" NAME="input" placeholder="Masukkan Angka" autofocus="autofocus" size="20"></INPUT>
+                <BR></BR>
+                <input class="btn btn-info" type="button" @click="checkInput()" value="   TEBAK   "/>
+                    <BR></BR>
+            		</div>
+        		</center>
+      		</div>		
+      			
+
+      		<div class="div" v-if="path !== '.'">
+       			<center>
+	            	<div class="head">
+	                <BR></BR>
+	                <FONT size="10">{{ title }}</FONT>
+	                <p>Tebaklah angka dari 1-10</p>
+	                <BR>
+                	<output id="output" name="x"></output>
+                    <BR>
+                    <h5>Kesempatan : {{ i }} / 3</h5>
+                        <INPUT v-model="guess" disabled class="input" TYPE="text" NAME="input" size="20"></INPUT>
+                    <BR></BR>
+                        <input disabled class="btn btn-info" type="button" @click="checkInput()" value="   TEBAK   "/>
+                    <BR></BR>
+            		</div>
+            		
+                  	<div class="div" v-if="path == 'less'">
+                  		<h4>{{ tebak.kurang }}</h4>
+                        <input class="btn btn-warning" type="button" @click="enable()" value="   TEBAK LAGI   "/>
+                  	</div>
+                  	<div class="div" v-if="path == 'greater'">
+                  		<h4>{{ tebak.lebih }}<h4>
+                            <input class="btn btn-warning" type="button" @click="enable()" value="   TEBAK LAGI   "/>
+                  	</div>
+                  	
+                  	<br><br>
+        		</center>
+      		</div>
+
+      		<div class="div" v-if="path == 'victory'">
+                <center>
+            	<FONT size="6" color="#41ff00">
+              	SELAMAT</FONT><FONT size="6" color="white">, tebakanmu benar!
+            	</FONT>
+            	<p>Angka yang benar adalah {{n}}</p>
+            	<img src="https://i.imgflip.com/1auqpe.jpg">
+            	<br><br>
+            	<input class="btn btn-success" type="button" name="again" value="  MAIN LAGI  " @click="reload()"/>
+                </center>
+          </div>
+
+          <div class="div" v-if="path == 'lost'">
+                <center>
+            	<font size="6" color="white">
+                    Tebakanmu <font color="Red">SALAH</font>, jawaban yang benar adalah {{ n }}</font><br/>
+                    <img src="https://i.chzbgr.com/full/8366530560/h8A020E4F/wanna-try-again"> 
+           		<BR>
+            	<input class="btn btn-success" type="button" name="again" value="   MAIN LAGI  " @click="reload()"/>
+                </center>
+          </div>
+
+
+        <footer class="text-center mt-5">
+            {{ `${author.nama} | ${author.npm} | ${author.kelas}` }}
+        </footer>
+        </form>
+    </div>
+</body>
+
+<script>
+    new Vue({
+        el: '#app',
+		data: {
+			title:'Tebak Angka',
+			author: {
+                nama:'Arnawa Juan Ibnuaji',
+                npm: '180709849',
+                kelas: 'PAW A',
+            },
+            tebak: {
+                kurang: "Angka Terlalu Kecil",
+                lebih: "Angka Terlalu Besar",
+            },
+            n: -1,
+            i: 0,
+            path: '.',
+            guess : '' 
+        },
+        methods: {
+            setRndNumber: function() {
+                do {
+                    this.n = Math.ceil(Math.random()*10);
+                } while (this.n>10 || this.n<1);
+                console.log(this.n);
+                },
+                checkInput : function(input) {
+		            if (this.n == -1)
+			            this.setRndNumber();
+
+                let num = parseInt(this.guess);
+                this.guess = '';
+                num=Math.ceil(num);
+                if (num>=1 && num<=10) {
+                    ++this.i;
+                if (num == this.n) {
+                    this.path = "victory";
+                }else{
+                if (this.i==3) {
+                    this.path = "lost";
+                }else{
+                if (num>this.n) {
+                    this.path = "greater";
+                };
+                if (num<this.n) {
+                    this.path ="less";
+                };
+              }
+            };
+        form.reset();
+        }
+        else {
+          alert('Masukkan Angka antara 1 hingga 10');
+          form.reset ();
+            }
+        },
+        enable: function(){
+                this.path=".";
+            },
+        reload: function() {
+            this.path = ".";
+            this.setRndNumber();
+            this.i = 0;
+            }
+        }
+    });
+    app.setRndNumber();
+    </script>
+
+    <style>
+        html, body {
+            height: 1000px;
+            background: linear-gradient(0deg, rgba(0,82,212,1) 0%, rgba(67,100,247,1) 50%, rgba(111,177,252,1) 100%);
+            color: white;
+        }
+        #app{
+            display: flex;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</html>
